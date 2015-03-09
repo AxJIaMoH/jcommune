@@ -25,4 +25,10 @@
     <bean class="org.jtalks.jcommune.web.filters.HeadRequestTypeFilter"/>
   </util:list>
 
+  <bean class="org.jtalks.jcommune.model.utils.Users" factory-method="getInstance"/>
+
+  <bean class="org.jtalks.jcommune.model.utils.Groups" factory-method="getInstance"/>
+
+  <bean class="org.jtalks.jcommune.model.utils.Branches" factory-method="getInstance"/>
+
 </beans>

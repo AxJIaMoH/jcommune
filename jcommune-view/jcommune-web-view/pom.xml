@@ -116,10 +116,26 @@
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.spockframework</groupId>
+      <artifactId>spock-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.spockframework</groupId>
+      <artifactId>spock-spring</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>ro.isdc.wro4j</groupId>
         <artifactId>wro4j-maven-plugin</artifactId>
@@ -288,7 +304,63 @@
           </dependency>
         </dependencies>
       </plugin>
+      <plugin>
+        <!-- Spock framework uses JUnit, so we must run both TestNG and JUnit tests -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.12.4</version>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <testNGArtifactName>none:none</testNGArtifactName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test-testng</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <junitArtifactName>none:none</junitArtifactName>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.gmavenplus</groupId>
+          <artifactId>gmavenplus-plugin</artifactId>
+          <version>1.2</version>
+          <configuration>
+            <testSources>
+              <fileset>
+                <directory>${project.basedir}/src/test/java</directory>
+                <includes>
+                  <include>**/*.groovy</include>
+                </includes>
+              </fileset>
+            </testSources>
+            <header>${project.name}</header>
+            <scope>package</scope>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>compile</goal>
+                <goal>testCompile</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <testResources>
       <testResource>
         <!-- WEB-INF folder marked as test resource directory to provide possibility to access to
@@ -299,6 +371,7 @@
         <directory>${project.basedir}/src/test/resources</directory>
       </testResource>
     </testResources>
+    <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
     <finalName>jcommune</finalName>
   </build>
 
